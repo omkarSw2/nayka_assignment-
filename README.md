@@ -71,3 +71,21 @@ The user interface is designed based on the specifications provided in the Figma
 
 Conclusion
 This project demonstrates the integration of cutting-edge technologies to create a full-stack web application with essential features such as authentication, a private dashboard, and seamless CRUD operations for product management. Feel free to explore and enhance the project further based on your requirements.
+
+
+![Screenshot 2024-01-05 115309](https://github.com/omkarSw2/nayka_assignment-/assets/119350956/e19a79ce-0e9d-4342-976d-bcb30a7b4d03)
+
+
+
+![Screenshot 2024-01-05 115231](https://github.com/omkarSw2/nayka_assignment-/assets/119350956/13969527-f3d8-421a-b156-3a2f6c006021)
+
+
+
+
+![Screenshot 2024-01-05 115214](https://github.com/omkarSw2/nayka_assignment-/assets/119350956/9e3b9123-d9ba-4e90-83ce-0f1f4f906a67)
+
+
+
+
+
+
