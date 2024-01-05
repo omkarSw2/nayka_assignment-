@@ -4,12 +4,33 @@ const getProduct = async (req, res) => {
   try {
     const page = +req.query.page || 1;
     const limit = +req.query.limit || 10;
+    const genderFilter = req.query.gender || null;
+    const categoryFilter = req.query.category || null;
+    const sortField = req.query.sortBy || "price";
+    const sortOrder = req.query.sortOrder === "desc" ? -1 : 1;
 
     const skip = (page - 1) * limit;
 
-    const products = await productModel.find().skip(skip).limit(limit);
+    // Build the match object based on filters
+    const match = {};
+    if (genderFilter) {
+      match.gender = genderFilter;
+    }
+    if (categoryFilter) {
+      match.category = categoryFilter;
+    }
 
-    const totalProducts = await productModel.countDocuments();
+    // Add the aggregation pipeline stages
+    const products = await productModel
+      .aggregate([
+        { $match: match }, // Filter by gender and category
+        { $sort: { [sortField]: sortOrder } }, // Sorting based on the specified field and order
+        { $skip: skip },
+        { $limit: limit },
+      ])
+      .exec();
+
+    const totalProducts = await productModel.countDocuments(match);
     const totalPages = Math.ceil(totalProducts / limit);
 
     return res.status(200).send({
