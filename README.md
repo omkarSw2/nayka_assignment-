@@ -62,7 +62,7 @@ npm start
 # Backend
 ```javascript
 cd backend
-npm start
+npm server
 ```
 
 
