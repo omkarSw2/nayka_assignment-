@@ -137,7 +137,7 @@ const GenderChart = async (req, res) => {
       },
       {
         $project: {
-          gender: "$_id",
+          name: "$_id",
           count: 1,
           _id: 0,
         },
@@ -172,7 +172,7 @@ const ProductChart = async (req, res) => {
       },
       {
         $project: {
-          category: "$_id",
+          name: "$_id",
           count: 1,
           _id: 0,
         },
