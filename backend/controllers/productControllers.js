@@ -8,10 +8,10 @@ const getProduct = async (req, res) => {
     const categoryFilter = req.query.category || null;
     const sortField = req.query.sortBy || "price";
     const sortOrder = req.query.sortOrder === "desc" ? -1 : 1;
+    const searchQuery = req.query.search || null;
 
     const skip = (page - 1) * limit;
 
-    // Build the match object based on filters
     const match = {};
     if (genderFilter) {
       match.gender = genderFilter;
@@ -19,12 +19,14 @@ const getProduct = async (req, res) => {
     if (categoryFilter) {
       match.category = categoryFilter;
     }
+    if (searchQuery) {
+      match.$or = [{ name: { $regex: searchQuery, $options: "i" } }];
+    }
 
-    // Add the aggregation pipeline stages
     const products = await productModel
       .aggregate([
-        { $match: match }, // Filter by gender and category
-        { $sort: { [sortField]: sortOrder } }, // Sorting based on the specified field and order
+        { $match: match },
+        { $sort: { [sortField]: sortOrder } },
         { $skip: skip },
         { $limit: limit },
       ])
