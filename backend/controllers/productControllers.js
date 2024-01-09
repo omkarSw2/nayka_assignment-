@@ -126,6 +126,39 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const GenderChart = async (req, res) => {
+  try {
+    const genderChart = [
+      {
+        $group: {
+          _id: "$gender",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          gender: "$_id",
+          count: 1,
+          _id: 0,
+        },
+      },
+    ];
+
+    const productChart = await productModel.aggregate(genderChart);
+
+    return res.status(200).send({
+      status: true,
+      msg: "Product Fetching Gender Chart Successfully.!",
+      productChart,
+    });
+  } catch (error) {
+    return res.status(401).send({
+      status: false,
+      msg: "error Fetching Gender Chart",
+      error: error.message,
+    });
+  }
+};
 const ProductChart = async (req, res) => {
   try {
     const categoryChart = [
@@ -149,7 +182,7 @@ const ProductChart = async (req, res) => {
 
     return res.status(200).send({
       status: true,
-      msg: "Product Deleted Successfully.!",
+      msg: "Product Fetching Category Chart Successfully.!",
       productChart,
     });
   } catch (error) {
@@ -167,4 +200,5 @@ module.exports = {
   patchProduct,
   deleteProduct,
   ProductChart,
+  GenderChart,
 };
