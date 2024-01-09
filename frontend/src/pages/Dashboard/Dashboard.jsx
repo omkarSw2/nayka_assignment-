@@ -16,10 +16,9 @@ import {
 } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { SearchIcon } from "@chakra-ui/icons";
-import { AlertDialogs } from "../../components/AlertDilog/AlertDialog";
-import EditProductModal from "../../components/EditProductModal/EditProductModal";
+
 import AddProductModal from "../../components/AddProductModal/AddProductModal";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../../redux/Product/ProductApi";
@@ -33,19 +32,36 @@ const Dashboard = () => {
     onClose: addOnClose,
   } = useDisclosure();
 
-  const {
-    Products,
-    ProductIsLoding,
-    ProductIsError,
-    currentPage,
-    totalPages,
-    totalProducts,
-  } = useSelector((store) => store.ProductReducer);
+  const { Products, currentPage, totalPages } = useSelector(
+    (store) => store.ProductReducer
+  );
+
+  const [searchparams, setSearchParams] = useSearchParams();
+  let g = searchparams.get("gender");
+  const [gender, setGender] = useState(g || "");
+  let c = searchparams.get("category");
+  const [category, setCategory] = useState(c || "");
+  let s = searchparams.get("search");
+  const [search, setSearch] = useState(s || "");
+  let p = searchparams.get("page");
+  const [page, setPage] = useState(p || 1);
+  let sor = searchparams.get("sortOrder");
+  const [sort, setSort] = useState(sor || "");
+  console.log("sortOrder", sor, sort);
+
   let tot = new Array(totalPages).fill(0);
   useEffect(() => {
-    dispatch(getProducts());
-    
-  }, []);
+    let params = {};
+
+    if (sort.length) params.sortOrder = sort;
+    if (category.length) params.category = category;
+    if (gender.length) params.gender = gender;
+    if (search.length) params.search = search;
+    if (page > 0) params.page = page;
+    setSearchParams(params);
+    dispatch(getProducts(params));
+    console.log("triggerd");
+  }, [gender, category, search, page, sort]);
 
   return (
     <>
@@ -125,7 +141,12 @@ const Dashboard = () => {
                     <InputLeftElement pointerEvents="none">
                       <SearchIcon color="gray.300" />
                     </InputLeftElement>
-                    <Input type="tel" placeholder="Phone number" width="auto" />
+                    <Input
+                      type="tel"
+                      placeholder="Phone number"
+                      width="auto"
+                      onChange={(e) => setSearch(e.target.value)}
+                    />
                   </InputGroup>
                   <div className=" flex items-center justify-center">
                     <svg
@@ -151,16 +172,25 @@ const Dashboard = () => {
                 {/* serch bar end */}
 
                 <div className="grid grid-cols-4 mb-10  gap-4">
-                  <Select variant="unstyled" placeholder="Filer By Gender">
+                  <Select
+                    variant="unstyled"
+                    placeholder="Filer By Gender"
+                    onChange={(e) => setGender(e.target.value)}>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                   </Select>
-                  <Select variant="unstyled" placeholder="Filer By Category">
+                  <Select
+                    variant="unstyled"
+                    placeholder="Filer By Category"
+                    onChange={(e) => setCategory(e.target.value)}>
                     <option value="makeup">Makeup</option>
                     <option value="skincare">Skincare</option>
                     <option value="haircare">Haircare</option>
                   </Select>
-                  <Select variant="unstyled" placeholder="Sort By Price">
+                  <Select
+                    variant="unstyled"
+                    placeholder="Sort By Price"
+                    onChange={(e) => setSort(e.target.value)}>
                     <option value="asc">Assending</option>
                     <option value="desc">Dessending</option>
                   </Select>
@@ -176,10 +206,9 @@ const Dashboard = () => {
                           className="isolate inline-flex -space-x-px rounded-md shadow-sm"
                           aria-label="Pagination">
                           <button
+                            onClick={() => setPage(page - 1)}
                             disabled={currentPage - 1 <= 0}
-                            className={`${
-                              currentPage - 1 <= 0 && "cursor-not-allowed"
-                            }relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0`}>
+                            className={`relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0`}>
                             <span className="sr-only">Previous</span>
                             <ChevronLeftIcon
                               className="h-5 w-5"
@@ -189,6 +218,7 @@ const Dashboard = () => {
 
                           {tot?.map((e, i) => (
                             <button
+                              onClick={() => setPage(i + 1)}
                               key={i}
                               aria-current="page"
                               className={`relative z-10 inline-flex items-center ${
@@ -200,10 +230,9 @@ const Dashboard = () => {
                           ))}
 
                           <button
-                            disabled={currentPage + 1 >= totalPages}
-                            className={`${
-                              currentPage + 1 >= totalPages &&
-                              "cursor-not-allowed"
+                            onClick={() => setPage(page + 1)}
+                            disabled={currentPage + 1 > totalPages}
+                            className={`"cursor-not-allowed"
                             }relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0`}>
                             <span className="sr-only">Next</span>
                             <ChevronRightIcon

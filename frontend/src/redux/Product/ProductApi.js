@@ -4,18 +4,28 @@ import {
   PRODUCTISLODING,
   PRODUCTSUCCESS,
 } from "./ProductTypes";
-const baseUrl = "https://nutty-jersey-fox.cyclic.app/";
+const baseUrl = "https://nutty-jersey-fox.cyclic.app";
 
-export const getProducts = () => async (dispatch) => {
-  try {
-    dispatch({ type: PRODUCTISLODING });
-    const response = await axios.get(`${baseUrl}/api/products`);
-    // console.log(response.data);
-    dispatch({ type: PRODUCTSUCCESS, payload: response.data });
-  } catch (error) {
-    dispatch({ type: PRODUCTISERROR });
-  }
-};
+export const getProducts =
+  (params = {}) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: PRODUCTISLODING });
+      const response = await axios.get(`${baseUrl}/api/products`, {
+        params: {
+          gender: params.gender,
+          category: params.category,
+          sortOrder: params.sortOrder,
+          search: params.search,
+          page: params.page,
+        },
+      });
+      // console.log(response.data);
+      dispatch({ type: PRODUCTSUCCESS, payload: response.data });
+    } catch (error) {
+      dispatch({ type: PRODUCTISERROR });
+    }
+  };
 
 export const patchProduct = (_id, obj) => async (dispatch) => {
   try {

@@ -13,14 +13,18 @@ const generateRandomColors = (count, dence) => {
   return colors;
 };
 
-const PieChart = () => {
+const PieChart = (d) => {
+  let lab = d.data?.map((i) => i.name);
+  let count = d.data?.map((i) => i.count);
+
   const data = {
-    labels: ["male", "female"],
+    labels: lab,
+
     datasets: [
       {
-        data: [12, 19],
-        backgroundColor: generateRandomColors(2, 0.2),
-        borderColor: generateRandomColors(2, 0.5),
+        data: count,
+        backgroundColor: generateRandomColors(d.data.length, 0.5),
+        borderColor: "rgba(0, 0, 0, 0.7)",
         borderWidth: 1,
       },
     ],
