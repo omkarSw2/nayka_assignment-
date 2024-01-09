@@ -1,25 +1,32 @@
-import React from "react";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+const generateRandomColors = (count, dence) => {
+  const colors = [];
+  for (let i = 0; i < count; i++) {
+    const color = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(
+      Math.random() * 256
+    )}, ${Math.floor(Math.random() * 256)}, ${dence})`;
+    colors.push(color);
+  }
+  return colors;
+};
 
 const PieChart = () => {
-  // Example data
   const data = {
-    labels: ["Label 1", "Label 2", "Label 3"],
+    labels: ["male", "female"],
     datasets: [
       {
-        data: [30, 50, 20],
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+        data: [12, 19],
+        backgroundColor: generateRandomColors(2, 0.2),
+        borderColor: generateRandomColors(2, 0.5),
+        borderWidth: 1,
       },
     ],
   };
 
-  return (
-    <div>
-      <h2>Pie Chart Example</h2>
-      <Pie data={data} />
-    </div>
-  );
+  return <Pie data={data} />;
 };
 
 export default PieChart;

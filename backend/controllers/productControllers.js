@@ -126,6 +126,40 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const ProductChart = async (req, res) => {
+  try {
+    const categoryChart = [
+      {
+        $group: {
+          _id: "$category",
+          count: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $project: {
+          category: "$_id",
+          count: 1,
+          _id: 0,
+        },
+      },
+    ];
+    const productChart = await productModel.aggregate(categoryChart);
+
+    return res.status(200).send({
+      status: true,
+      msg: "Product Deleted Successfully.!",
+      productChart,
+    });
+  } catch (error) {
+    return res.status(401).send({
+      status: false,
+      msg: "error Fetching Category Chart  product",
+      error: error.message,
+    });
+  }
+};
 module.exports = {
   getProduct,
   getSinglProduct,
