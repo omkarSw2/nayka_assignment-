@@ -14,6 +14,6 @@ productRoute.route("/").post(postProduct);
 productRoute.route("/:_id").get(getSinglProduct);
 productRoute.route("/:_id").patch(patchProduct);
 productRoute.route("/:_id").delete(deleteProduct);
-productRoute.route("/category/chart").delete(ProductChart);
+productRoute.route("/category/chart").get(ProductChart);
 
 module.exports = { productRoute };
