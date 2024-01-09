@@ -166,4 +166,5 @@ module.exports = {
   postProduct,
   patchProduct,
   deleteProduct,
+  ProductChart,
 };

@@ -5,6 +5,7 @@ const {
   postProduct,
   patchProduct,
   deleteProduct,
+  ProductChart,
 } = require("../controllers/productControllers");
 const productRoute = express.Router();
 
@@ -13,5 +14,6 @@ productRoute.route("/").post(postProduct);
 productRoute.route("/:_id").get(getSinglProduct);
 productRoute.route("/:_id").patch(patchProduct);
 productRoute.route("/:_id").delete(deleteProduct);
+productRoute.route("/category/chart").delete(ProductChart);
 
 module.exports = { productRoute };
