@@ -51,6 +51,13 @@ const Dashboard = () => {
 
   let tot = new Array(totalPages).fill(0);
   useEffect(() => {
+
+    const abortController = new AbortController();
+
+    // Create a signal from the controller
+    const signal = abortController.signal;
+
+
     let params = {};
 
     if (sort.length) params.sortOrder = sort;
@@ -59,8 +66,14 @@ const Dashboard = () => {
     if (search.length) params.search = search;
     if (page > 0) params.page = page;
     setSearchParams(params);
-    dispatch(getProducts(params));
+    dispatch(getProducts(params,signal));
     console.log("triggerd");
+
+  return () => {
+    abortController.abort();
+  };
+
+    
   }, [gender, category, search, page, sort]);
 
   return (

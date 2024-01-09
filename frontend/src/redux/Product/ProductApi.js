@@ -7,7 +7,7 @@ import {
 const baseUrl = "https://nutty-jersey-fox.cyclic.app";
 
 export const getProducts =
-  (params = {}) =>
+  (params = {}, signal) =>
   async (dispatch) => {
     try {
       dispatch({ type: PRODUCTISLODING });
@@ -19,6 +19,7 @@ export const getProducts =
           search: params.search,
           page: params.page,
         },
+        signal,
       });
       // console.log(response.data);
       dispatch({ type: PRODUCTSUCCESS, payload: response.data });
